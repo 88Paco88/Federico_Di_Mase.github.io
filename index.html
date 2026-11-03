@@ -57,35 +57,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Sottile griglia secondaria tecnica */
-        .blueprint-subgrid {
-            background-image: radial-gradient(rgba(56, 189, 248, 0.12) 1px, transparent 1px);
-            background-size: 12px 12px;
-        }
-
-        /* Animazione fluida per apertura schede tecniche (Accordion) */
-        .accordion-content {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
-            opacity: 0;
-        }
-        .accordion-content.open {
-            grid-template-rows: 1fr;
-            opacity: 1;
-        }
-        .accordion-inner {
-            overflow: hidden;
-        }
-
-        /* Rotazione icona freccia */
-        .chevron-icon {
-            transition: transform 0.3s ease;
-        }
-        .chevron-icon.open {
-            transform: rotate(180deg);
-        }
-
         /* Stile QR Code Container */
         #qrcode img, #qrcode canvas {
             margin: 0 auto;
@@ -93,42 +64,62 @@
         }
     </style>
 </head>
-<body class="text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between items-center py-4 px-3 sm:py-8">
+<body class="text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-center items-center py-6 px-4">
 
     <!-- =====================================================================
-         CONFIGURAZIONE RAPIDA DATI PERSONALI (MODIFICA QUI I TUOI CONTATTI)
+         CONFIGURAZIONE RAPIDA DATI E SKILL (MODIFICA QUI CONTATTI E COMPETENZE)
          ===================================================================== -->
     <script>
         const USER_CONFIG = {
             firstName: "Federico",
             lastName: "Di Mase",
             fullName: "Federico Di Mase",
-            title: "Mechanical Engineer",
+            title: "Mechanical & Production Engineer",
             education: "BEng (Hons) Mechanical Engineering — The University of Manchester",
             
-            // ---> INSERISCI QUI I TUOI DATI REALI <---
-            email: "federico.di.mase@outlook.com",
-            phone: "+39 376 1249491",
-            linkedinUrl: "https://www.linkedin.com/in/federico-di-mase-572070268/",
+            // ---> 1. INSERISCI QUI I TUOI CONTATTI REALI <---
+            email: "federico.dimase@example.com",
+            phone: "+39 333 0000000",
+            linkedinUrl: "https://www.linkedin.com/in/federico-di-mase",
             
+            // Nomi dei file PDF del tuo CV (da mettere nella stessa cartella di index.html)
+            cvFileIT: "CV_Federico_Di_Mase_IT.pdf",
+            cvFileEN: "CV_Federico_Di_Mase_EN.pdf",
             
-            // Nomi dei file PDF del tuo CV (da mettere nella stessa cartella di questo file index.html)
-            cvFileIT: "Federico_Di_Mase_CV.pdf",
-            cvFileEN: "Federico_Di_Mase_CV.pdf",
-            
-            // URL fisso opzionale per il QR Code (se lasciato vuoto, usa automaticamente l'URL della pagina aperta)
-            customPortfolioUrl: "" 
+            // URL fisso opzionale per il QR Code (se vuoto, usa automaticamente l'URL della pagina aperta)
+            customPortfolioUrl: "",
+
+            // ---> 2. MODIFICA QUI LE TUE SKILL (in Italiano e Inglese) <---
+            // Puoi aggiungere, modificare o togliere voci racchiuse tra virgolette e separate da virgola
+            skills: {
+                it: [
+                    "SolidWorks & CAD",
+                    "ANSYS Mechanical (FEA)",
+                    "Produzione & KPI",
+                    "Tempi e Metodi",
+                    "Motorsport & Telemetry",
+                    "Python & MATLAB"
+                ],
+                en: [
+                    "SolidWorks & CAD",
+                    "ANSYS Mechanical (FEA)",
+                    "Production & KPIs",
+                    "Time & Motion Study",
+                    "Motorsport & Telemetry",
+                    "Python & MATLAB"
+                ]
+            }
         };
     </script>
 
-    <!-- CONTENITORE PRINCIPALE MOBILE-FIRST (Max 440px) -->
-    <main class="w-full max-w-[440px] bg-slate-900/90 backdrop-blur-md border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden relative">
+    <!-- CONTENITORE PRINCIPALE MOBILE-FIRST (Max 420px) -->
+    <main class="w-full max-w-[420px] bg-slate-900/90 backdrop-blur-md border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden relative">
         
         <!-- Barra decorativa superiore ciano -->
         <div class="h-1.5 w-full bg-gradient-to-r from-sky-500 via-cyan-400 to-blue-600"></div>
 
-        <!-- 1. TOP UTILITY BAR (Switch Lingua IT/EN + Tasto QR Fiera) -->
-        <div class="flex items-center justify-between px-5 pt-4 pb-2 border-b border-slate-800/80">
+        <!-- 1. TOP UTILITY BAR (Switch Lingua IT/EN + Tasto QR) -->
+        <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-slate-800/80">
             <!-- Selettore Lingua -->
             <div class="inline-flex items-center bg-slate-950 p-1 rounded-lg border border-slate-800" role="group" aria-label="Selettore Lingua">
                 <button id="btn-lang-it" onclick="setLanguage('it')" class="px-2.5 py-1 text-xs font-mono font-semibold rounded-md transition-all bg-sky-400 text-slate-950 shadow-sm">
@@ -139,7 +130,7 @@
                 </button>
             </div>
 
-            <!-- Pulsante Modalità Fiera (Mostra QR Code a tutto schermo) -->
+            <!-- Pulsante Mostra QR Code -->
             <button onclick="openQrModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 active:scale-95 border border-sky-400/30 text-sky-400 text-xs font-semibold transition-all">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h6v6H3V3zm12 0h6v6h-6V3zM3 15h6v6H3v-6zm13 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2zm-2-2h2v2h-2v-2z"/>
@@ -170,15 +161,15 @@
                         Mechanical & Production Engineer
                     </p>
                     <p class="text-xs font-mono text-sky-400/90 mt-1">
-                        BEng (Hons) Mechanical Engineering — Univ. of Manchester
+                        BEng (Hons) Mechanical Engineering — The University of Manchester
                     </p>
                 </div>
             </header>
 
             <!-- 3. ACTION BUTTONS (CTAs) -->
             <section class="space-y-2.5" aria-label="Azioni principali">
-                <!-- Primary CTA: Download CV PDF -->
-                <a id="cv-download-btn" href="CV_Federico_Di_Mase_IT.pdf" download class="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-xl bg-sky-400 hover:bg-sky-300 active:scale-[0.99] text-slate-950 font-bold text-sm shadow-lg shadow-sky-500/15 transition-all">
+                <!-- Primary CTA: Download CV PDF (Apre in nuova scheda) -->
+                <a id="cv-download-btn" href="CV_Federico_Di_Mase_IT.pdf" target="_blank" rel="noopener noreferrer" download class="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-xl bg-sky-400 hover:bg-sky-300 active:scale-[0.99] text-slate-950 font-bold text-sm shadow-lg shadow-sky-500/15 transition-all">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
@@ -193,30 +184,24 @@
                     <span data-i18n="saveVcfBtn">Salva Contatto in Rubrica (.vcf)</span>
                 </button>
 
-                <!-- Quick Contact Row (Email, LinkedIn, GitHub) -->
-                <div class="grid grid-cols-3 gap-2 pt-1">
-                    <a id="link-email" href="mailto:federico.dimase@example.com" class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg bg-slate-950/70 hover:bg-slate-800 border border-slate-800 hover:border-slate-600 text-xs font-medium text-slate-300 transition-all">
+                <!-- Quick Contact Row (Solo Email e LinkedIn, entrambi in nuova scheda) -->
+                <div class="grid grid-cols-2 gap-2.5 pt-1">
+                    <a id="link-email" href="mailto:federico.dimase@example.com" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-slate-950/70 hover:bg-slate-800 border border-slate-800 hover:border-slate-600 text-xs font-medium text-slate-200 transition-all">
                         <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                         </svg>
                         <span>Email</span>
                     </a>
-                    <a id="link-linkedin" href="https://www.linkedin.com/in/federico-di-mase" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg bg-slate-950/70 hover:bg-slate-800 border border-slate-800 hover:border-slate-600 text-xs font-medium text-slate-300 transition-all">
+                    <a id="link-linkedin" href="https://www.linkedin.com/in/federico-di-mase" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-slate-950/70 hover:bg-slate-800 border border-slate-800 hover:border-slate-600 text-xs font-medium text-slate-200 transition-all">
                         <svg class="w-4 h-4 text-sky-400" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
                         </svg>
                         <span>LinkedIn</span>
                     </a>
-                    <a id="link-github" href="https://github.com/federicodimase" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg bg-slate-950/70 hover:bg-slate-800 border border-slate-800 hover:border-slate-600 text-xs font-medium text-slate-300 transition-all">
-                        <svg class="w-4 h-4 text-sky-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-                        </svg>
-                        <span>GitHub</span>
-                    </a>
                 </div>
             </section>
 
-            <!-- 4. CORE COMPETENCIES (Technical Pill Tags) -->
+            <!-- 4. CORE COMPETENCIES (Generato automaticamente da USER_CONFIG.skills) -->
             <section>
                 <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-3">
                     <h2 class="text-[11px] font-mono uppercase tracking-wider text-slate-400" data-i18n="skillsSectionTitle">
@@ -224,237 +209,24 @@
                     </h2>
                     <span class="text-[10px] font-mono text-sky-400/80">CAD • FEA • OPS</span>
                 </div>
-                <div class="flex flex-wrap gap-1.5">
-                    <span class="px-2.5 py-1 text-xs font-medium rounded-md bg-slate-950 border border-slate-800 text-slate-200">SolidWorks & CAD</span>
-                    <span class="px-2.5 py-1 text-xs font-medium rounded-md bg-slate-950 border border-slate-800 text-slate-200">ANSYS Mechanical (FEA)</span>
-                    <span class="px-2.5 py-1 text-xs font-medium rounded-md bg-slate-950 border border-slate-800 text-slate-200" data-i18n="skillProd">Produzione & KPI</span>
-                    <span class="px-2.5 py-1 text-xs font-medium rounded-md bg-slate-950 border border-slate-800 text-slate-200" data-i18n="skillTime">Tempi e Metodi</span>
-                    <span class="px-2.5 py-1 text-xs font-medium rounded-md bg-slate-950 border border-slate-800 text-slate-200">Motorsport & Telemetry</span>
-                    <span class="px-2.5 py-1 text-xs font-medium rounded-md bg-slate-950 border border-slate-800 text-slate-200">Python & MATLAB</span>
-                </div>
-            </section>
-
-            <!-- 5. INTERACTIVE "TAP-TO-EXPAND" ENGINEERING HIGHLIGHTS -->
-            <section>
-                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-3">
-                    <h2 class="text-[11px] font-mono uppercase tracking-wider text-slate-400" data-i18n="projectsSectionTitle">
-                        Progetti & Esperienze (Tocca per espandere)
-                    </h2>
-                    <span class="text-[10px] font-mono text-sky-400 flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Interactive
-                    </span>
-                </div>
-
-                <div class="space-y-2.5">
-                    
-                    <!-- PROGETTO 1: Production Engineering (Adarte SRL) -->
-                    <div class="rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition-all overflow-hidden">
-                        <button onclick="toggleProject(1)" class="w-full text-left p-3.5 flex items-start justify-between gap-3">
-                            <div class="space-y-1">
-                                <div class="flex items-center gap-2">
-                                    <span class="px-1.5 py-0.5 text-[10px] font-mono font-semibold rounded bg-sky-500/15 text-sky-400 border border-sky-500/30">OPS & CAD</span>
-                                    <h3 class="text-sm font-semibold text-white" data-i18n="p1Title">Production Engineering & KPI</h3>
-                                </div>
-                                <p class="text-xs text-slate-400 leading-relaxed" data-i18n="p1Summary">
-                                    Analisi tempi e metodi, mappatura cicli produttivi e progettazione stampi/attrezzature in SolidWorks.
-                                </p>
-                            </div>
-                            <svg id="chevron-1" class="w-4 h-4 text-slate-400 shrink-0 mt-1 chevron-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-
-                        <!-- Contenuto Espandibile Progetto 1 -->
-                        <div id="content-1" class="accordion-content">
-                            <div class="accordion-inner px-3.5 pb-3.5 pt-1 border-t border-slate-800/80 space-y-3">
-                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside marker:text-sky-400">
-                                    <li data-i18n="p1Bullet1">Rilevazione tempi ciclo in reparto (Time & Motion Study) e riduzione colli di bottiglia.</li>
-                                    <li data-i18n="p1Bullet2">Sviluppo di dashboard KPI per monitoraggio efficienza operativa e standardizzazione processi.</li>
-                                    <li data-i18n="p1Bullet3">Modellazione CAD 3D in SolidWorks di attrezzature, dime di lavorazione e stampi.</li>
-                                </ul>
-
-                                <!-- Grafico Tecnico SVG (Sostituibile con un tag <img> per foto reale) -->
-                                <!-- SUGGERIMENTO: Per usare una tua immagine reale, sostituisci il blocco <svg> con:
-                                     <img src="tua-immagine-produzione.jpg" alt="KPI Produzione" class="w-full rounded-lg border border-slate-700"> -->
-                                <div class="rounded-lg bg-slate-900 border border-slate-800 p-2.5 blueprint-subgrid">
-                                    <div class="flex justify-between items-center text-[10px] font-mono text-slate-400 mb-1.5">
-                                        <span>CYCLE TIME & OEE OPTIMIZATION</span>
-                                        <span class="text-emerald-400 font-semibold">+18.4% EFF</span>
-                                    </div>
-                                    <svg viewBox="0 0 320 95" class="w-full h-auto overflow-visible">
-                                        <!-- Griglia di riferimento -->
-                                        <line x1="30" y1="15" x2="305" y2="15" stroke="#334155" stroke-dasharray="2,2" stroke-width="1"/>
-                                        <line x1="30" y1="45" x2="305" y2="45" stroke="#334155" stroke-dasharray="2,2" stroke-width="1"/>
-                                        <line x1="30" y1="75" x2="305" y2="75" stroke="#475569" stroke-width="1"/>
-                                        <!-- Etichette asse Y -->
-                                        <text x="4" y="18" fill="#64748b" font-size="8" font-family="monospace">100%</text>
-                                        <text x="9" y="48" fill="#64748b" font-size="8" font-family="monospace">75%</text>
-                                        <text x="9" y="78" fill="#64748b" font-size="8" font-family="monospace">50%</text>
-                                        <!-- Barre Tempo Ciclo (Pre vs Post) -->
-                                        <rect x="50" y="32" width="18" height="43" rx="2" fill="#475569"/>
-                                        <rect x="72" y="18" width="18" height="57" rx="2" fill="#38bdf8"/>
-                                        <rect x="125" y="38" width="18" height="37" rx="2" fill="#475569"/>
-                                        <rect x="147" y="21" width="18" height="54" rx="2" fill="#38bdf8"/>
-                                        <rect x="200" y="35" width="18" height="40" rx="2" fill="#475569"/>
-                                        <rect x="222" y="14" width="18" height="61" rx="2" fill="#38bdf8"/>
-                                        <!-- Curva cumulativa KPI -->
-                                        <polyline fill="none" stroke="#34d399" stroke-width="2" points="60,42 135,30 210,18 285,12"/>
-                                        <circle cx="60" cy="42" r="3" fill="#34d399"/>
-                                        <circle cx="135" cy="30" r="3" fill="#34d399"/>
-                                        <circle cx="210" cy="18" r="3" fill="#34d399"/>
-                                        <circle cx="285" cy="12" r="3.5" fill="#10b981"/>
-                                        <!-- Etichette Stazioni -->
-                                        <text x="53" y="88" fill="#94a3b8" font-size="8" font-family="monospace">OP-10</text>
-                                        <text x="128" y="88" fill="#94a3b8" font-size="8" font-family="monospace">OP-20</text>
-                                        <text x="203" y="88" fill="#94a3b8" font-size="8" font-family="monospace">OP-30</text>
-                                        <text x="268" y="88" fill="#34d399" font-size="8" font-family="monospace">KPI TARGET</text>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PROGETTO 2: Motorsport & Formula Student EV -->
-                    <div class="rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition-all overflow-hidden">
-                        <button onclick="toggleProject(2)" class="w-full text-left p-3.5 flex items-start justify-between gap-3">
-                            <div class="space-y-1">
-                                <div class="flex items-center gap-2">
-                                    <span class="px-1.5 py-0.5 text-[10px] font-mono font-semibold rounded bg-amber-500/15 text-amber-400 border border-amber-500/30">MOTORSPORT</span>
-                                    <h3 class="text-sm font-semibold text-white" data-i18n="p2Title">Formula Student EV & WorldSBK</h3>
-                                </div>
-                                <p class="text-xs text-slate-400 leading-relaxed" data-i18n="p2Summary">
-                                    Sub-Team Leader Powertrain-Battery (validazione 40g in ANSYS) e telemetria in pista WorldSBK.
-                                </p>
-                            </div>
-                            <svg id="chevron-2" class="w-4 h-4 text-slate-400 shrink-0 mt-1 chevron-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-
-                        <!-- Contenuto Espandibile Progetto 2 -->
-                        <div id="content-2" class="accordion-content">
-                            <div class="accordion-inner px-3.5 pb-3.5 pt-1 border-t border-slate-800/80 space-y-3">
-                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside marker:text-sky-400">
-                                    <li data-i18n="p2Bullet1"><strong>Manchester Stinger Motorsport:</strong> Coordinamento team Powertrain-Battery e verifica strutturale FEA del pacco batteria HV con carichi d'impatto fino a 40g.</li>
-                                    <li data-i18n="p2Bullet2"><strong>WorldSBK (Cremona Round):</strong> Supporto meccanico e acquisizione dati telemetrici in pista su Yamaha R3/R7 tramite software AiM RaceStudio3.</li>
-                                </ul>
-
-                                <!-- Grafico Tecnico SVG: Telemetria + 40g Shock Profile -->
-                                <div class="rounded-lg bg-slate-900 border border-slate-800 p-2.5 blueprint-subgrid">
-                                    <div class="flex justify-between items-center text-[10px] font-mono text-slate-400 mb-1.5">
-                                        <span>HV BATTERY 40G FEA & AIM TELEMETRY</span>
-                                        <span class="text-sky-400 font-semibold">FSSAE COMPLIANT</span>
-                                    </div>
-                                    <svg viewBox="0 0 320 90" class="w-full h-auto">
-                                        <!-- Riquadro Telemetria RPM / Throttle -->
-                                        <path d="M 10 65 Q 35 60, 50 30 T 95 22 T 135 55 T 180 18 T 230 25 T 275 60 L 310 20" fill="none" stroke="#38bdf8" stroke-width="2"/>
-                                        <!-- Secondo canale telemetria (G-Load / Brake Pressure) -->
-                                        <path d="M 10 72 L 45 72 L 55 25 L 85 70 L 130 70 L 140 15 L 170 68 L 265 68 L 278 28 L 310 68" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3,2"/>
-                                        <!-- Linea di soglia 40G -->
-                                        <line x1="10" y1="15" x2="310" y2="15" stroke="#ef4444" stroke-width="0.8" stroke-dasharray="4,4"/>
-                                        <text x="12" y="11" fill="#f87171" font-size="7.5" font-family="monospace">PEAK LOAD ENVELOPE: 40G DECEL VALIDATED</text>
-                                        <text x="12" y="84" fill="#38bdf8" font-size="7.5" font-family="monospace">CH1: SPEED/RPM</text>
-                                        <text x="105" y="84" fill="#f59e0b" font-size="7.5" font-family="monospace">CH2: LONGITUDINAL G-LOAD</text>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PROGETTO 3: Structural R&D & Non-Linear FEA (Bamboo-Aluminum Frame) -->
-                    <div class="rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition-all overflow-hidden">
-                        <button onclick="toggleProject(3)" class="w-full text-left p-3.5 flex items-start justify-between gap-3">
-                            <div class="space-y-1">
-                                <div class="flex items-center gap-2">
-                                    <span class="px-1.5 py-0.5 text-[10px] font-mono font-semibold rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">R&D / FEA</span>
-                                    <h3 class="text-sm font-semibold text-white" data-i18n="p3Title">Structural R&D & Non-Linear FEA</h3>
-                                </div>
-                                <p class="text-xs text-slate-400 leading-relaxed" data-i18n="p3Summary">
-                                    Progettazione telaio composito Bambù-Alluminio e simulazione strutturale ANSYS secondo ISO 4210.
-                                </p>
-                            </div>
-                            <svg id="chevron-3" class="w-4 h-4 text-slate-400 shrink-0 mt-1 chevron-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-
-                        <!-- Contenuto Espandibile Progetto 3 -->
-                        <div id="content-3" class="accordion-content">
-                            <div class="accordion-inner px-3.5 pb-3.5 pt-1 border-t border-slate-800/80 space-y-3">
-                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside marker:text-sky-400">
-                                    <li data-i18n="p3Bullet1">Caratterizzazione meccanica ortotropa/anisotropa e progettazione di giunti strutturali in lega di alluminio.</li>
-                                    <li data-i18n="p3Bullet2">Analisi agli elementi finiti (FEA) non-lineare in ANSYS Mechanical per carichi di fatica e impatto (ISO 4210).</li>
-                                    <li data-i18n="p3Bullet3">Ottimizzazione rigidezza torsionale e riduzione massa complessiva del telaio.</li>
-                                </ul>
-
-                                <!-- Grafico Tecnico SVG: Wireframe FEA Telaio -->
-                                <div class="rounded-lg bg-slate-900 border border-slate-800 p-2.5 blueprint-subgrid">
-                                    <div class="flex justify-between items-center text-[10px] font-mono text-slate-400 mb-1.5">
-                                        <span>ANSYS VON MISES STRESS — ISO 4210</span>
-                                        <span class="text-emerald-400 font-semibold">SF > 1.85</span>
-                                    </div>
-                                    <svg viewBox="0 0 320 95" class="w-full h-auto">
-                                        <defs>
-                                            <linearGradient id="feaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                <stop offset="0%" stop-color="#ef4444"/>
-                                                <stop offset="35%" stop-color="#eab308"/>
-                                                <stop offset="70%" stop-color="#22c55e"/>
-                                                <stop offset="100%" stop-color="#3b82f6"/>
-                                            </linearGradient>
-                                        </defs>
-                                        <!-- Scala Colori FEA a sinistra -->
-                                        <rect x="12" y="12" width="8" height="65" rx="2" fill="url(#feaGrad)" transform="rotate(90 16 44)" display="none"/>
-                                        <rect x="14" y="14" width="7" height="58" rx="1" fill="#3b82f6"/>
-                                        <rect x="14" y="14" width="7" height="40" rx="1" fill="#22c55e"/>
-                                        <rect x="14" y="14" width="7" height="22" rx="1" fill="#eab308"/>
-                                        <rect x="14" y="14" width="7" height="9" rx="1" fill="#ef4444"/>
-                                        <text x="26" y="21" fill="#f87171" font-size="7" font-family="monospace">MAX</text>
-                                        <text x="26" y="72" fill="#60a5fa" font-size="7" font-family="monospace">MIN</text>
-
-                                        <!-- Geometria Wireframe Telaio Bici (Truss FEA) -->
-                                        <!-- Carro posteriore -->
-                                        <line x1="95" y1="68" x2="155" y2="70" stroke="#3b82f6" stroke-width="3.5" stroke-linecap="round"/>
-                                        <line x1="95" y1="68" x2="140" y2="28" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>
-                                        <!-- Tubo piantone -->
-                                        <line x1="155" y1="70" x2="140" y2="24" stroke="#22c55e" stroke-width="4" stroke-linecap="round"/>
-                                        <!-- Tubo orizzontale e obliquo (con gradiente di stress vicino al tubo sterzo) -->
-                                        <line x1="140" y1="28" x2="232" y2="24" stroke="url(#feaGrad)" stroke-width="4.5" stroke-linecap="round"/>
-                                        <line x1="155" y1="70" x2="236" y2="36" stroke="url(#feaGrad)" stroke-width="5" stroke-linecap="round"/>
-                                        <!-- Tubo sterzo (Zona di concentrazione sforzi ISO 4210) -->
-                                        <line x1="230" y1="18" x2="240" y2="44" stroke="#f59e0b" stroke-width="5.5" stroke-linecap="round"/>
-                                        <!-- Nodi in Alluminio -->
-                                        <circle cx="95" cy="68" r="4" fill="#38bdf8"/>
-                                        <circle cx="155" cy="70" r="5" fill="#eab308"/>
-                                        <circle cx="140" cy="28" r="4.5" fill="#22c55e"/>
-                                        <circle cx="232" cy="24" r="4.5" fill="#ef4444"/>
-                                        <circle cx="236" cy="36" r="4.5" fill="#ef4444"/>
-                                        <!-- Vettore Forza di Carico F -->
-                                        <line x1="268" y1="30" x2="245" y2="30" stroke="#f87171" stroke-width="2"/>
-                                        <polygon points="245,30 251,26 251,34" fill="#f87171"/>
-                                        <text x="272" y="33" fill="#f87171" font-size="8" font-family="monospace">F_impact</text>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                <!-- NOTA: Le skill qui dentro vengono caricate da USER_CONFIG.skills (in alto nel file) -->
+                <div id="skills-container" class="flex flex-wrap gap-1.5"></div>
             </section>
 
         </div>
 
         <!-- Footer Tecnico -->
         <footer class="px-5 py-3 bg-slate-950/90 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
-            <span>REV 2026.1 // DIGITAL CARD</span>
+            <span>FEDERICO DI MASE // BENG</span>
             <button onclick="openQrModal()" class="text-sky-400 hover:underline" data-i18n="footerShare">Condividi via QR →</button>
         </footer>
     </main>
 
     <!-- =====================================================================
-         MODAL QR CODE A TUTTO SCHERMO (PER SCANSIONE RAPIDA IN FIERA)
+         MODAL QR CODE A TUTTO SCHERMO
          ===================================================================== -->
     <div id="qr-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/90 backdrop-blur-md p-4">
-        <div class="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl p-6 text-center shadow-2xl space-y-5 relative animate-fadeIn">
+        <div class="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl p-6 text-center shadow-2xl space-y-5 relative">
             
             <!-- Tasto Chiudi -->
             <button onclick="closeQrModal()" class="absolute top-4 right-4 p-2 rounded-lg bg-slate-800 text-slate-400 hover:text-white" aria-label="Chiudi">
@@ -463,13 +235,12 @@
                 </svg>
             </button>
 
-            <div class="space-y-1">
-                <span class="text-[11px] font-mono uppercase tracking-widest text-sky-400" data-i18n="qrModalBadge">Modalità Fiera</span>
+            <div class="space-y-1 pt-1">
                 <h3 class="text-lg font-bold text-white">Federico Di Mase</h3>
                 <p class="text-xs text-slate-400" data-i18n="qrModalSub">Inquadra con la fotocamera per aprire il profilo e scaricare il CV sul tuo telefono</p>
             </div>
 
-            <!-- Contenitore QR ad alto contrasto (Sfondo bianco per lettura istantanea) -->
+            <!-- Contenitore QR ad alto contrasto -->
             <div class="bg-white p-4 rounded-xl inline-block shadow-inner mx-auto">
                 <div id="qrcode" class="w-[200px] h-[200px] flex items-center justify-center"></div>
             </div>
@@ -487,7 +258,7 @@
     </div>
 
     <!-- =====================================================================
-         LOGICA JAVASCRIPT (Switch IT/EN, Generatore .VCF, Accordion, QR Code)
+         LOGICA JAVASCRIPT (Switch IT/EN, Rendering Skill, .VCF, QR Code)
          ===================================================================== -->
     <script>
         // Dizionario Traduzioni IT / EN
@@ -499,25 +270,7 @@
                 downloadCvBtn: "Scarica CV Completo (PDF)",
                 saveVcfBtn: "Salva Contatto in Rubrica (.vcf)",
                 skillsSectionTitle: "Competenze Tecniche Chiave",
-                skillProd: "Produzione & KPI",
-                skillTime: "Tempi e Metodi",
-                projectsSectionTitle: "Progetti & Esperienze (Tocca per espandere)",
-                p1Title: "Production Engineering & KPI",
-                p1Summary: "Analisi tempi e metodi, mappatura cicli produttivi e progettazione stampi/attrezzature in SolidWorks.",
-                p1Bullet1: "Rilevazione tempi ciclo in reparto (Time & Motion Study) e riduzione colli di bottiglia.",
-                p1Bullet2: "Sviluppo di dashboard KPI per monitoraggio efficienza operativa e standardizzazione processi.",
-                p1Bullet3: "Modellazione CAD 3D in SolidWorks di attrezzature, dime di lavorazione e stampi.",
-                p2Title: "Formula Student EV & WorldSBK",
-                p2Summary: "Sub-Team Leader Powertrain-Battery (validazione 40g in ANSYS) e telemetria in pista WorldSBK.",
-                p2Bullet1: "<strong>Manchester Stinger Motorsport:</strong> Coordinamento team Powertrain-Battery e verifica strutturale FEA del pacco batteria HV fino a 40g.",
-                p2Bullet2: "<strong>WorldSBK (Cremona Round):</strong> Supporto meccanico e acquisizione dati telemetrici in pista su Yamaha R3/R7 con AiM RaceStudio3.",
-                p3Title: "Structural R&D & Non-Linear FEA",
-                p3Summary: "Progettazione telaio composito Bambù-Alluminio e simulazione strutturale ANSYS secondo ISO 4210.",
-                p3Bullet1: "Caratterizzazione meccanica anisotropa e progettazione di giunti strutturali in lega di alluminio.",
-                p3Bullet2: "Analisi agli elementi finiti (FEA) non-lineare in ANSYS Mechanical per carichi di fatica e impatto (ISO 4210).",
-                p3Bullet3: "Ottimizzazione rigidezza torsionale e riduzione massa complessiva del telaio.",
                 footerShare: "Condividi via QR →",
-                qrModalBadge: "Modalità Condivisione Fiera",
                 qrModalSub: "Inquadra con la fotocamera per aprire questo profilo e scaricare il CV sul tuo smartphone",
                 copyLinkBtn: "📋 Copia Link",
                 copiedMsg: "✅ Link Copiato!",
@@ -530,26 +283,8 @@
                 downloadCvBtn: "Download Full CV (PDF)",
                 saveVcfBtn: "Save Contact to Phone (.vcf)",
                 skillsSectionTitle: "Core Technical Competencies",
-                skillProd: "Production & KPIs",
-                skillTime: "Time & Motion Study",
-                projectsSectionTitle: "Engineering Highlights (Tap to expand)",
-                p1Title: "Production Engineering & KPIs",
-                p1Summary: "Time & motion studies, shop-floor cycle mapping, KPI tracking, and SolidWorks tooling/die design.",
-                p1Bullet1: "Conducted shop-floor Time & Motion studies to identify bottlenecks and streamline assembly workflows.",
-                p1Bullet2: "Built operational KPI frameworks to track cycle efficiency and standardize production processes.",
-                p1Bullet3: "Designed 3D CAD fixtures, tooling, and dies in SolidWorks to support manufacturing operations.",
-                p2Title: "Formula Student EV & WorldSBK",
-                p2Summary: "Powertrain-Battery Sub-Team Leader (40g FEA validation in ANSYS) & WorldSBK trackside telemetry.",
-                p2Bullet1: "<strong>Manchester Stinger Motorsport:</strong> Led the Powertrain-Battery sub-team; validated HV battery enclosure integrity under 40g impact loads in ANSYS.",
-                p2Bullet2: "<strong>WorldSBK (Cremona Round):</strong> Provided trackside mechanical and telemetry data analysis support on Yamaha R3/R7 using AiM RaceStudio3.",
-                p3Title: "Structural R&D & Non-Linear FEA",
-                p3Summary: "Bamboo-Aluminum composite bicycle frame engineering & non-linear ANSYS validation to ISO 4210.",
-                p3Bullet1: "Performed orthotropic material characterization and engineered structural aluminum lugs/joints.",
-                p3Bullet2: "Executed non-linear FEA simulations in ANSYS Mechanical under ISO 4210 fatigue and impact loads.",
-                p3Bullet3: "Optimized frame torsional stiffness-to-weight ratio through iterative CAD/FEA refinement.",
                 footerShare: "Share via QR →",
-                qrModalBadge: "Trade Fair Quick Share",
-                qrModalSub: "Scan with your phone camera to open this interactive profile and download the CV PDF",
+                qrModalSub: "Scan with your phone camera to open this profile and download the CV PDF",
                 copyLinkBtn: "📋 Copy Link",
                 copiedMsg: "✅ Link Copied!",
                 shareBtn: "📤 Share Link"
@@ -559,14 +294,20 @@
         let currentLang = 'it';
         let qrInstance = null;
 
-        // Inizializzazione Link Contatti da USER_CONFIG
+        // Funzione che disegna i tag delle Skill partendo da USER_CONFIG.skills
+        function renderSkills(lang) {
+            const container = document.getElementById('skills-container');
+            const skillsList = USER_CONFIG.skills[lang] || USER_CONFIG.skills.it;
+            container.innerHTML = skillsList.map(skill => 
+                `<span class="px-2.5 py-1 text-xs font-medium rounded-md bg-slate-950 border border-slate-800 text-slate-200">${skill}</span>`
+            ).join('');
+        }
+
+        // Inizializzazione Link Contatti e Skill da USER_CONFIG
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('link-email').href = `mailto:${USER_CONFIG.email}`;
             document.getElementById('link-linkedin').href = USER_CONFIG.linkedinUrl;
-            document.getElementById('link-github').href = USER_CONFIG.githubUrl;
-            
-            // Espandi automaticamente il primo progetto per mostrare subito che le card sono interattive
-            toggleProject(1);
+            renderSkills(currentLang);
         });
 
         // Funzione Cambio Lingua Istantaneo (IT / EN)
@@ -582,6 +323,9 @@
                 }
             });
 
+            // Aggiorna le skill nella lingua selezionata
+            renderSkills(lang);
+
             // Aggiorna il file PDF di destinazione del pulsante Download CV
             const cvBtn = document.getElementById('cv-download-btn');
             cvBtn.href = lang === 'it' ? USER_CONFIG.cvFileIT : USER_CONFIG.cvFileEN;
@@ -595,21 +339,6 @@
             } else {
                 btnEn.className = "px-2.5 py-1 text-xs font-mono font-semibold rounded-md transition-all bg-sky-400 text-slate-950 shadow-sm";
                 btnIt.className = "px-2.5 py-1 text-xs font-mono font-semibold rounded-md transition-all text-slate-400 hover:text-slate-200";
-            }
-        }
-
-        // Funzione Accordion per aprire/chiudere le schede tecniche
-        function toggleProject(index) {
-            const content = document.getElementById(`content-${index}`);
-            const chevron = document.getElementById(`chevron-${index}`);
-            const isOpen = content.classList.contains('open');
-
-            if (isOpen) {
-                content.classList.remove('open');
-                chevron.classList.remove('open');
-            } else {
-                content.classList.add('open');
-                chevron.classList.add('open');
             }
         }
 
